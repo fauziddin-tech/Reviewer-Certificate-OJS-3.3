@@ -1,0 +1,21 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "plugins.generic.reviewerCertificate.displayName"
+msgstr "Reviewer Certificate"
+
+msgid "plugins.generic.reviewerCertificate.description"
+msgstr "Allows peer reviewers to download a certificate of recognition for completed reviews."
+
+msgid "plugins.generic.reviewerCertificate.myCertificates"
+msgstr "My Review Certificates"
+
+msgid "plugins.generic.reviewerCertificate.download"
+msgstr "Print / Save as PDF"
+
+msgid "plugins.generic.reviewerCertificate.noReviews"
+msgstr "No completed reviews found."
+
+msgid "plugins.generic.reviewerCertificate.completedOn"
+msgstr "Completed:"

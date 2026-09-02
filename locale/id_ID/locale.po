@@ -1,0 +1,21 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+
+msgid "plugins.generic.reviewerCertificate.displayName"
+msgstr "Sertifikat Reviewer"
+
+msgid "plugins.generic.reviewerCertificate.description"
+msgstr "Memungkinkan reviewer mengunduh sertifikat untuk review yang telah diselesaikan."
+
+msgid "plugins.generic.reviewerCertificate.myCertificates"
+msgstr "Sertifikat Review Saya"
+
+msgid "plugins.generic.reviewerCertificate.download"
+msgstr "Cetak / Simpan sebagai PDF"
+
+msgid "plugins.generic.reviewerCertificate.noReviews"
+msgstr "Belum ada review yang selesai."
+
+msgid "plugins.generic.reviewerCertificate.completedOn"
+msgstr "Selesai:"
