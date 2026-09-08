@@ -326,7 +326,7 @@ class ReviewerCertificateHandler extends Handler {
 			return new JSONMessage(false, __('common.error.permissionRequired'));
 		}
 
-		$currentVersion = '1.9.0';
+		$currentVersion = '1.9.1';
 		$version = $plugin->getCurrentVersion();
 		if ($version) $currentVersion = $version->getVersionString(false);
 		$releaseUrl = 'https://github.com/fauziddin-tech/Reviewer-Certificate-OJS-3.3/releases/latest';
