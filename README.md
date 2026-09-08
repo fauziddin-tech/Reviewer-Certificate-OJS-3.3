@@ -20,6 +20,8 @@
 - Peta dunia responsif, grafik peringkat negara, dan ringkasan jumlah kontribusi.
 - Normalisasi negara memakai kode ISO dari profil OJS agar variasi penulisan tidak menggandakan data.
 - Ambang privasi per negara serta pilihan posisi dan jenis statistik yang ditampilkan.
+- Pengaturan terbuka sebagai pop-up di halaman plugin, tanpa berpindah dari dashboard OJS.
+- Menu **Upgrade** menjelaskan versi terpasang dan jalur paket resmi langsung dari dashboard.
 
 ## Kompatibilitas
 
@@ -58,6 +60,10 @@ plugins/generic/reviewerCertificate/ReviewerCertificatePlugin.inc.php
 ```
 
 Setelah itu, bersihkan cache OJS dan aktifkan plugin melalui halaman pengelolaan plugin.
+
+## Upgrade
+
+OJS membatasi penggantian berkas plugin kepada akun **Site Administrator**. Jika masuk sebagai Site Administrator, menu **Upgrade** bawaan OJS akan menampilkan formulir unggah paket `.tar.gz`. Jika masuk sebagai **Journal Manager**, plugin menampilkan pop-up Upgrade berisi versi terpasang, tautan rilis resmi, dan petunjuk yang harus diteruskan kepada Site Administrator. Pembatasan ini tidak dilewati karena upgrade mengubah berkas pada server.
 
 ## Pengaturan
 

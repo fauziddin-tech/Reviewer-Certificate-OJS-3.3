@@ -78,16 +78,11 @@ class ReviewerCertificateHandler extends Handler {
 	function _isJournalManager($request, $journal) {
 		$user = $request->getUser();
 		if (!$user || !$journal) return false;
+		if (Validation::isSiteAdmin()) return true;
 		$userGroupDao = DAORegistry::getDAO('UserGroupDAO');
 		$userGroups = $userGroupDao->getByUserId($user->getId(), $journal->getId());
 		while ($group = $userGroups->next()) {
 			if ($group->getRoleId() == ROLE_ID_MANAGER) return true;
-		}
-		if (defined('ROLE_ID_SITE_ADMIN')) {
-			$allUserGroups = $userGroupDao->getByUserId($user->getId());
-			while ($group = $allUserGroups->next()) {
-				if ($group->getRoleId() == ROLE_ID_SITE_ADMIN) return true;
-			}
 		}
 		return false;
 	}
@@ -299,6 +294,55 @@ class ReviewerCertificateHandler extends Handler {
 		return true;
 	}
 
+	function settingsModal($args, $request) {
+		$this->_sendPrivacyHeaders(true);
+		$journal = $request->getJournal();
+		$plugin = $this->_getPlugin();
+		if (!$request->getUser() || !$journal || !$plugin || !$this->_isJournalManager($request, $journal)) {
+			return new JSONMessage(false, __('common.error.permissionRequired'));
+		}
+
+		$settingsUrl = $request->getDispatcher()->url(
+			$request,
+			ROUTE_PAGE,
+			null,
+			'reviewercertificate',
+			'settings',
+			null,
+			array('embedded' => 1)
+		);
+		$html = '<div class="rc-settings-modal" style="width:min(1180px,92vw);height:min(780px,82vh);">';
+		$html .= '<iframe title="' . $this->_e(__('plugins.generic.reviewerCertificate.settings.title')) .
+			'" src="' . $this->_e($settingsUrl) .
+			'" style="display:block;width:100%;height:100%;border:0;background:#fff" loading="eager"></iframe></div>';
+		return new JSONMessage(true, $html);
+	}
+
+	function upgradeInfo($args, $request) {
+		$this->_sendPrivacyHeaders(true);
+		$journal = $request->getJournal();
+		$plugin = $this->_getPlugin();
+		if (!$request->getUser() || !$journal || !$plugin || !$this->_isJournalManager($request, $journal)) {
+			return new JSONMessage(false, __('common.error.permissionRequired'));
+		}
+
+		$currentVersion = '1.9.0';
+		$version = $plugin->getCurrentVersion();
+		if ($version) $currentVersion = $version->getVersionString(false);
+		$releaseUrl = 'https://github.com/fauziddin-tech/Reviewer-Certificate-OJS-3.3/releases/latest';
+		$html = '<div style="max-width:660px;padding:8px 4px 4px;color:#252a32">';
+		$html .= '<h2 style="margin:0 0 8px">' . $this->_e(__('plugins.generic.reviewerCertificate.upgrade.title')) . '</h2>';
+		$html .= '<p style="margin:0 0 18px;color:#667085;line-height:1.55">' . $this->_e(__('plugins.generic.reviewerCertificate.upgrade.description')) . '</p>';
+		$html .= '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px">';
+		$html .= '<div style="padding:14px;border:1px solid #d8dde3;background:#f8fafc"><small style="color:#667085">' . $this->_e(__('plugins.generic.reviewerCertificate.upgrade.current')) . '</small><div style="font-size:20px;font-weight:700;margin-top:4px">v' . $this->_e($currentVersion) . '</div></div>';
+		$html .= '<div style="padding:14px;border:1px solid #d8dde3;background:#f8fafc"><small style="color:#667085">' . $this->_e(__('plugins.generic.reviewerCertificate.upgrade.access')) . '</small><div style="font-weight:700;margin-top:7px">' . $this->_e(__('plugins.generic.reviewerCertificate.upgrade.siteAdmin')) . '</div></div></div>';
+		$html .= '<div style="padding:14px 16px;background:#fffaeb;border-left:4px solid #f79009;line-height:1.55;margin-bottom:18px">' . $this->_e(__('plugins.generic.reviewerCertificate.upgrade.managerNotice')) . '</div>';
+		$html .= '<ol style="padding-left:22px;line-height:1.65;margin:0 0 20px"><li>' . $this->_e(__('plugins.generic.reviewerCertificate.upgrade.step1')) . '</li><li>' . $this->_e(__('plugins.generic.reviewerCertificate.upgrade.step2')) . '</li><li>' . $this->_e(__('plugins.generic.reviewerCertificate.upgrade.step3')) . '</li></ol>';
+		$html .= '<a href="' . $this->_e($releaseUrl) . '" target="_blank" rel="noopener noreferrer" class="pkp_button">' . $this->_e(__('plugins.generic.reviewerCertificate.upgrade.download')) . '</a>';
+		$html .= '</div>';
+		return new JSONMessage(true, $html);
+	}
+
 	function settings($args, $request) {
 		$this->_sendPrivacyHeaders(true);
 		$user = $request->getUser();
@@ -313,6 +357,7 @@ class ReviewerCertificateHandler extends Handler {
 			return;
 		}
 
+		$embedded = (bool) $request->getUserVar('embedded');
 		$errors = array();
 		$saved = false;
 		if (isset($_SERVER['REQUEST_METHOD']) && strtoupper($_SERVER['REQUEST_METHOD']) === 'POST') {
@@ -342,13 +387,14 @@ class ReviewerCertificateHandler extends Handler {
 		$baseUrl = rtrim($request->getBaseUrl(), '/');
 		$backUrl = $baseUrl . '/index.php/' . rawurlencode($journal->getPath()) . '/management/settings/website#plugins';
 		$actionUrl = $request->getDispatcher()->url($request, ROUTE_PAGE, null, 'reviewercertificate', 'settings');
+		if ($embedded) $actionUrl .= (strpos($actionUrl, '?') === false ? '?' : '&') . 'embedded=1';
 
-		echo '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">';
+		echo '<!DOCTYPE html><html lang="en"' . ($embedded ? ' class="rc-embedded"' : '') . '><head><meta charset="UTF-8">';
 		echo '<meta name="viewport" content="width=device-width,initial-scale=1">';
 		echo '<meta name="robots" content="noindex,nofollow,noarchive">';
 		echo $this->_getFaviconHtml($journal, $baseUrl);
 		echo '<title>Reviewer Certificate Settings</title><style>';
-		echo '*{box-sizing:border-box}body{margin:0;background:#eef1f4;color:#252a32;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}.top{background:#003b4d;color:#fff;padding:18px 28px;font-size:20px;font-weight:700}.page{max-width:1080px;margin:32px auto;padding:0 18px}.panel{background:#fff;border:1px solid #d8dde3;padding:28px;box-shadow:0 2px 8px rgba(0,0,0,.04)}.head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;border-bottom:1px solid #e3e6ea;padding-bottom:18px;margin-bottom:22px}.head h1{font-size:24px;margin:0 0 7px}.head p{margin:0;color:#667085;line-height:1.5}.back{color:#0071a1;font-weight:600;text-decoration:none;white-space:nowrap}.notice{padding:13px 15px;margin-bottom:18px;border-left:4px solid}.success{background:#ecfdf3;border-color:#12b76a;color:#067647}.error{background:#fef3f2;border-color:#f04438;color:#b42318}.warning{background:#fffaeb;border-color:#f79009;color:#7a2e0e}.error ul{margin:0;padding-left:20px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.card{border:1px solid #d8dde3;padding:16px}.card h2{font-size:17px;margin:0 0 13px}.preview{height:120px;background:#f7f8fa;border:1px dashed #c6ccd4;display:flex;align-items:center;justify-content:center;padding:10px}.preview img{max-width:100%;max-height:98px;object-fit:contain}.field{margin-top:14px}.field>label,.public-grid label{display:block;font-weight:650;font-size:13px;margin-bottom:6px}.field input[type=file]{max-width:100%;font-size:12px}.field input[type=number],.signatory input,.public-grid input[type=text],.public-grid input[type=number],.public-grid select{width:100%;height:40px;border:1px solid #aeb5bf;padding:8px 10px;background:#fff}.remove{display:block;font-size:12px;color:#555;line-height:1.4;margin-top:12px}.signatory,.public-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}.signatory label{display:block;font-size:13px;font-weight:650;margin-bottom:6px}.section{margin-top:28px;padding-top:22px;border-top:1px solid #e3e6ea}.section h2{margin:0 0 6px;font-size:19px}.check{display:flex!important;gap:8px;align-items:flex-start;font-weight:500!important;line-height:1.45}.quality{display:flex;gap:12px;margin-top:14px}.quality span{padding:8px 11px;border-radius:6px;background:#f2f4f7;font-size:12px}.actions{display:flex;justify-content:flex-end;align-items:center;gap:14px;border-top:1px solid #e3e6ea;margin-top:24px;padding-top:20px}.save{border:0;background:#0071a1;color:#fff;font-weight:700;padding:11px 20px;cursor:pointer}.help{font-size:13px;color:#667085;margin:0 0 20px}@media(max-width:760px){.grid,.signatory,.public-grid{grid-template-columns:1fr}.quality{flex-direction:column}.head{display:block}.back{display:inline-block;margin-top:12px}}</style></head><body>';
+		echo '*{box-sizing:border-box}body{margin:0;background:#eef1f4;color:#252a32;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}.top{background:#003b4d;color:#fff;padding:18px 28px;font-size:20px;font-weight:700}.page{max-width:1080px;margin:32px auto;padding:0 18px}.panel{background:#fff;border:1px solid #d8dde3;padding:28px;box-shadow:0 2px 8px rgba(0,0,0,.04)}.head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;border-bottom:1px solid #e3e6ea;padding-bottom:18px;margin-bottom:22px}.head h1{font-size:24px;margin:0 0 7px}.head p{margin:0;color:#667085;line-height:1.5}.back{color:#0071a1;font-weight:600;text-decoration:none;white-space:nowrap}.notice{padding:13px 15px;margin-bottom:18px;border-left:4px solid}.success{background:#ecfdf3;border-color:#12b76a;color:#067647}.error{background:#fef3f2;border-color:#f04438;color:#b42318}.warning{background:#fffaeb;border-color:#f79009;color:#7a2e0e}.error ul{margin:0;padding-left:20px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.card{border:1px solid #d8dde3;padding:16px}.card h2{font-size:17px;margin:0 0 13px}.preview{height:120px;background:#f7f8fa;border:1px dashed #c6ccd4;display:flex;align-items:center;justify-content:center;padding:10px}.preview img{max-width:100%;max-height:98px;object-fit:contain}.field{margin-top:14px}.field>label,.public-grid label{display:block;font-weight:650;font-size:13px;margin-bottom:6px}.field input[type=file]{max-width:100%;font-size:12px}.field input[type=number],.signatory input,.public-grid input[type=text],.public-grid input[type=number],.public-grid select{width:100%;height:40px;border:1px solid #aeb5bf;padding:8px 10px;background:#fff}.remove{display:block;font-size:12px;color:#555;line-height:1.4;margin-top:12px}.signatory,.public-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}.signatory label{display:block;font-size:13px;font-weight:650;margin-bottom:6px}.section{margin-top:28px;padding-top:22px;border-top:1px solid #e3e6ea}.section h2{margin:0 0 6px;font-size:19px}.check{display:flex!important;gap:8px;align-items:flex-start;font-weight:500!important;line-height:1.45}.quality{display:flex;gap:12px;margin-top:14px}.quality span{padding:8px 11px;border-radius:6px;background:#f2f4f7;font-size:12px}.actions{display:flex;justify-content:flex-end;align-items:center;gap:14px;border-top:1px solid #e3e6ea;margin-top:24px;padding-top:20px}.save{border:0;background:#0071a1;color:#fff;font-weight:700;padding:11px 20px;cursor:pointer}.help{font-size:13px;color:#667085;margin:0 0 20px}.rc-embedded body{background:#fff}.rc-embedded .top{display:none}.rc-embedded .page{max-width:none;margin:0;padding:0}.rc-embedded .panel{border:0;box-shadow:none;padding:22px}.rc-embedded .head .back,.rc-embedded .actions .back{display:none}@media(max-width:760px){.grid,.signatory,.public-grid{grid-template-columns:1fr}.quality{flex-direction:column}.head{display:block}.back{display:inline-block;margin-top:12px}.rc-embedded .panel{padding:16px}}</style></head><body>';
 		echo '<div class="top">Reviewer Certificate</div><main class="page"><div class="panel">';
 		echo '<div class="head"><div><h1>Certificate image settings</h1><p>Upload and size the journal logo, editor signature, and official stamp.</p></div><a class="back" href="' . $this->_e($backUrl) . '">&larr; Back to Plugins</a></div>';
 		if ($saved) echo '<div class="notice success">Settings and images were saved successfully.</div>';

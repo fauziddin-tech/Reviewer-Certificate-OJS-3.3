@@ -2,7 +2,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 import('lib.pkp.classes.plugins.GenericPlugin');
 import('lib.pkp.classes.linkAction.LinkAction');
-import('lib.pkp.classes.linkAction.request.RedirectAction');
+import('lib.pkp.classes.linkAction.request.AjaxModal');
+import('lib.pkp.classes.security.Validation');
 import('classes.template.TemplateManager');
 
 class ReviewerCertificatePlugin extends GenericPlugin {
@@ -35,14 +36,41 @@ function getActions($request, $actionArgs) {
 		ROUTE_PAGE,
 		null,
 		'reviewercertificate',
-		'settings'
+		'settingsModal'
 	);
 	array_unshift($actions, new LinkAction(
 		'settings',
-		new RedirectAction($settingsUrl),
+		new AjaxModal(
+			$settingsUrl,
+			$this->getDisplayName(),
+			'modal_settings'
+		),
 		__('manager.plugins.settings'),
-		null
+		'settings'
 	));
+
+	// OJS exposes its native upload/upgrade action only to Site Administrators.
+	// Journal Managers receive a safe in-OJS upgrade information modal instead
+	// of filesystem write access.
+	if (!Validation::isSiteAdmin()) {
+		$upgradeUrl = $request->getDispatcher()->url(
+			$request,
+			ROUTE_PAGE,
+			null,
+			'reviewercertificate',
+			'upgradeInfo'
+		);
+		array_splice($actions, 1, 0, array(new LinkAction(
+			'upgradeInfo',
+			new AjaxModal(
+				$upgradeUrl,
+				__('plugins.generic.reviewerCertificate.upgrade.title'),
+				'modal_upgrade'
+			),
+			__('grid.action.upgrade'),
+			'upgrade'
+		)));
+	}
 	return $actions;
 }
 
