@@ -7,7 +7,7 @@
 	}
 	window.reviewerCertificateTabLoaded = true;
 	window.reviewerCertificateTabStatus = {
-		version: '1.8.0',
+		version: '1.9.0',
 		loaded: true,
 		installed: false,
 		panelLoaded: false

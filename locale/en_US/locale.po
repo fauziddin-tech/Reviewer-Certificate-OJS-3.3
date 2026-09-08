@@ -19,3 +19,27 @@ msgstr "No completed reviews found."
 
 msgid "plugins.generic.reviewerCertificate.completedOn"
 msgstr "Completed:"
+
+msgid "plugins.generic.reviewerCertificate.insights.title"
+msgstr "Our Reviewer and Editorial Community"
+
+msgid "plugins.generic.reviewerCertificate.insights.eyebrow"
+msgstr "Global scholarly community"
+
+msgid "plugins.generic.reviewerCertificate.insights.reviewers"
+msgstr "Reviewers"
+
+msgid "plugins.generic.reviewerCertificate.insights.reviews"
+msgstr "Completed reviews"
+
+msgid "plugins.generic.reviewerCertificate.insights.editors"
+msgstr "Editors"
+
+msgid "plugins.generic.reviewerCertificate.insights.countries"
+msgstr "Countries represented"
+
+msgid "plugins.generic.reviewerCertificate.insights.noData"
+msgstr "No country data meets the current privacy threshold."
+
+msgid "plugins.generic.reviewerCertificate.insights.javascript"
+msgstr "JavaScript is required to display the reviewer and editor map."
