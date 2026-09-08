@@ -2,6 +2,13 @@
 
 All notable changes to Reviewer Certificate are documented in this file.
 
+## [1.9.2] - 2026-09-08
+
+### Fixed
+
+- Constrained the settings iframe to the OJS modal width so it no longer expands the dashboard or creates a browser-level horizontal scrollbar.
+- Made image cards and form controls responsive inside narrower modal and mobile viewports.
+
 ## [1.9.1] - 2026-09-08
 
 ### Fixed
