@@ -30,4 +30,4 @@ jobs:
           jq -e '.type == "FeatureCollection" and (.features | length > 150)' assets/world-110m.json
       - name: Validate plugin metadata
         run: |
-          php -r '$xml = simplexml_load_file("version.xml"); if (!$xml || (string) $xml->release !== "1.9.0.0") { exit(1); }'
+          php -r '$xml = simplexml_load_file("version.xml"); if (!$xml || (string) $xml->release !== "1.9.1.0") { exit(1); }'

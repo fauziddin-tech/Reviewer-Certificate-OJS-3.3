@@ -2,6 +2,15 @@
 
 All notable changes to Reviewer Certificate are documented in this file.
 
+## [1.9.1] - 2026-09-08
+
+### Fixed
+
+- Changed **Settings** from a separate page redirect to an in-dashboard OJS modal.
+- Added an OJS-native upgrade path for Site Administrators and a safe upgrade-information modal for Journal Managers.
+- Corrected Site Administrator authorization for the plugin settings.
+- Increased the maintenance release number so OJS recognizes this package as newer than 1.9.0.
+
 ## [1.9.0] - 2026-09-08
 
 ### Added
@@ -11,8 +20,6 @@ All notable changes to Reviewer Certificate are documented in this file.
 - Added aggregate totals for reviewers, completed reviews, editors, and represented countries.
 - Added display controls, homepage placement, role filters, a custom panel title, and a privacy threshold.
 - Added manager-facing country-data quality indicators and reviewer profile reminders for missing country data.
-- Added an in-dashboard settings modal so configuration no longer opens as a separate OJS page.
-- Added an Upgrade action for Journal Managers with version information and the official package workflow; Site Administrators continue to use OJS's native secured upgrade form.
 
 ### Changed
 

@@ -109,7 +109,7 @@ Panel publik dinonaktifkan secara bawaan setelah upgrade. Untuk menampilkannya, 
 
 ## Versi
 
-Versi saat ini: **1.9.0**
+Versi saat ini: **1.9.1**
 
 Perubahan setiap versi tersedia pada [CHANGELOG.md](CHANGELOG.md). Informasi pelaporan keamanan tersedia pada [SECURITY.md](SECURITY.md).
 
