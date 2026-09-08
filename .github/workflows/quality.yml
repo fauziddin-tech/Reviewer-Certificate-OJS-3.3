@@ -30,9 +30,9 @@ jobs:
           jq -e '.type == "FeatureCollection" and (.features | length > 150)' assets/world-110m.json
       - name: Validate plugin metadata
         run: |
-          php -r '$xml = simplexml_load_file("version.xml"); if (!$xml || (string) $xml->release !== "1.9.1.0") { exit(1); }'
+          php -r '$xml = simplexml_load_file("version.xml"); if (!$xml || (string) $xml->release !== "1.9.2.0") { exit(1); }'
       - name: Validate OJS upgrade package structure
         run: |
           chmod +x scripts/package-release.sh
-          scripts/package-release.sh "$RUNNER_TEMP/reviewerCertificate-v1.9.1.tar.gz"
-          test "$(tar -tzf "$RUNNER_TEMP/reviewerCertificate-v1.9.1.tar.gz" | sed -n '1p')" = "reviewerCertificate/"
+          scripts/package-release.sh "$RUNNER_TEMP/reviewerCertificate-v1.9.2.tar.gz"
+          test "$(tar -tzf "$RUNNER_TEMP/reviewerCertificate-v1.9.2.tar.gz" | sed -n '1p')" = "reviewerCertificate/"
