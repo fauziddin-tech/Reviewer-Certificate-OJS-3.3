@@ -2,6 +2,23 @@
 
 All notable changes to Reviewer Certificate are documented in this file.
 
+## [1.9.0] - 2026-09-08
+
+### Added
+
+- Added an optional public reviewer and editor statistics panel on the journal homepage.
+- Added a responsive, accessible world map and ranked country chart without an external map service.
+- Added aggregate totals for reviewers, completed reviews, editors, and represented countries.
+- Added display controls, homepage placement, role filters, a custom panel title, and a privacy threshold.
+- Added manager-facing country-data quality indicators and reviewer profile reminders for missing country data.
+
+### Changed
+
+- Country values are validated against ISO 3166-1 alpha-2 codes already used by OJS registration and profile forms.
+- Invalid or free-text country values are excluded instead of being guessed or merged incorrectly.
+- Public statistics expose aggregate counts only; reviewer/editor names and contact details remain private.
+- Updated frontend asset cache versions and plugin metadata to 1.9.0.
+
 ## [1.8.0] - 2026-09-02
 
 ### Security
@@ -33,4 +50,3 @@ QR codes created by version 1.7.0 used legacy verification URLs without a securi
 - Added the integrated Certificates tab, search, and client-side pagination.
 - Added certificate image and signatory settings.
 - Added certificate printing, QR verification, favicon support, and theme matching.
-

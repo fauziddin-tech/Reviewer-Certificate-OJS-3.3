@@ -19,3 +19,27 @@ msgstr "Belum ada review yang selesai."
 
 msgid "plugins.generic.reviewerCertificate.completedOn"
 msgstr "Selesai:"
+
+msgid "plugins.generic.reviewerCertificate.insights.title"
+msgstr "Komunitas Reviewer dan Editor Kami"
+
+msgid "plugins.generic.reviewerCertificate.insights.eyebrow"
+msgstr "Komunitas ilmiah global"
+
+msgid "plugins.generic.reviewerCertificate.insights.reviewers"
+msgstr "Reviewer"
+
+msgid "plugins.generic.reviewerCertificate.insights.reviews"
+msgstr "Review selesai"
+
+msgid "plugins.generic.reviewerCertificate.insights.editors"
+msgstr "Editor"
+
+msgid "plugins.generic.reviewerCertificate.insights.countries"
+msgstr "Negara terwakili"
+
+msgid "plugins.generic.reviewerCertificate.insights.noData"
+msgstr "Belum ada data negara yang memenuhi ambang privasi saat ini."
+
+msgid "plugins.generic.reviewerCertificate.insights.javascript"
+msgstr "JavaScript diperlukan untuk menampilkan peta reviewer dan editor."

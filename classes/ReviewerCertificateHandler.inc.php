@@ -205,8 +205,25 @@ class ReviewerCertificateHandler extends Handler {
 
 		$editorName = trim((string) $request->getUserVar('editorName'));
 		$editorTitle = trim((string) $request->getUserVar('editorTitle'));
+		$publicInsightsTitle = trim((string) $request->getUserVar('publicInsightsTitle'));
 		if (strlen($editorName) > 150 || strlen($editorTitle) > 150) {
 			$errors[] = 'The signatory name and title must not exceed 150 characters.';
+		}
+		if (strlen($publicInsightsTitle) > 120) {
+			$errors[] = 'The public statistics title must not exceed 120 characters.';
+		}
+		$minimumCountryCount = (int) $request->getUserVar('minimumCountryCount');
+		if ($minimumCountryCount < 1 || $minimumCountryCount > 10) {
+			$errors[] = 'The privacy threshold must be between 1 and 10 people per country.';
+		}
+		$publicInsightsPosition = (string) $request->getUserVar('publicInsightsPosition');
+		if (!in_array($publicInsightsPosition, array('top', 'bottom'))) {
+			$errors[] = 'Choose a valid public statistics position.';
+		}
+		$showReviewerStats = $request->getUserVar('showReviewerStats') ? '1' : '0';
+		$showEditorStats = $request->getUserVar('showEditorStats') ? '1' : '0';
+		if ($showReviewerStats === '0' && $showEditorStats === '0') {
+			$errors[] = 'Select reviewer statistics, editor statistics, or both.';
 		}
 
 		$numberRules = array(
@@ -267,6 +284,12 @@ class ReviewerCertificateHandler extends Handler {
 
 		$plugin->updateSetting($journal->getId(), 'editorName', $editorName, 'string');
 		$plugin->updateSetting($journal->getId(), 'editorTitle', $editorTitle, 'string');
+		$plugin->updateSetting($journal->getId(), 'publicInsightsEnabled', $request->getUserVar('publicInsightsEnabled') ? '1' : '0', 'string');
+		$plugin->updateSetting($journal->getId(), 'publicInsightsTitle', $publicInsightsTitle, 'string');
+		$plugin->updateSetting($journal->getId(), 'publicInsightsPosition', $publicInsightsPosition, 'string');
+		$plugin->updateSetting($journal->getId(), 'minimumCountryCount', (string) $minimumCountryCount, 'string');
+		$plugin->updateSetting($journal->getId(), 'showReviewerStats', $showReviewerStats, 'string');
+		$plugin->updateSetting($journal->getId(), 'showEditorStats', $showEditorStats, 'string');
 		foreach ($numbers as $name => $value) {
 			$plugin->updateSetting($journal->getId(), $name, $value, 'string');
 		}
@@ -303,6 +326,15 @@ class ReviewerCertificateHandler extends Handler {
 		$logoHeight = $isPostWithErrors ? (string) $request->getUserVar('logoHeightMm') : $this->_settingNumber($plugin, $journal->getId(), 'logoHeightMm', 19, 10, 25);
 		$signatureWidth = $isPostWithErrors ? (string) $request->getUserVar('signatureWidthMm') : $this->_settingNumber($plugin, $journal->getId(), 'signatureWidthMm', 38, 20, 55);
 		$stampSize = $isPostWithErrors ? (string) $request->getUserVar('stampSizeMm') : $this->_settingNumber($plugin, $journal->getId(), 'stampSizeMm', 22, 15, 35);
+		$publicInsightsEnabled = $isPostWithErrors ? (bool) $request->getUserVar('publicInsightsEnabled') : (bool) $plugin->getSetting($journal->getId(), 'publicInsightsEnabled');
+		$publicInsightsTitle = $isPostWithErrors ? (string) $request->getUserVar('publicInsightsTitle') : (string) $plugin->getSetting($journal->getId(), 'publicInsightsTitle');
+		$publicInsightsPosition = $isPostWithErrors ? (string) $request->getUserVar('publicInsightsPosition') : (string) $plugin->getSetting($journal->getId(), 'publicInsightsPosition');
+		if (!in_array($publicInsightsPosition, array('top', 'bottom'))) $publicInsightsPosition = 'bottom';
+		$minimumCountryCount = $isPostWithErrors ? (int) $request->getUserVar('minimumCountryCount') : (int) $plugin->getSetting($journal->getId(), 'minimumCountryCount');
+		if ($minimumCountryCount < 1 || $minimumCountryCount > 10) $minimumCountryCount = 2;
+		$showReviewerStats = $isPostWithErrors ? (bool) $request->getUserVar('showReviewerStats') : $plugin->getSetting($journal->getId(), 'showReviewerStats') !== '0';
+		$showEditorStats = $isPostWithErrors ? (bool) $request->getUserVar('showEditorStats') : $plugin->getSetting($journal->getId(), 'showEditorStats') !== '0';
+		$countryStatistics = method_exists($plugin, 'getCountryStatistics') ? $plugin->getCountryStatistics($journal->getId()) : null;
 		$logoAsset = $plugin->getCertificateAsset($request, $journal->getId(), 'logoFile', 'logo.png');
 		$signatureAsset = $plugin->getCertificateAsset($request, $journal->getId(), 'signatureFile', 'signature.png');
 		$stampAsset = $plugin->getCertificateAsset($request, $journal->getId(), 'stampFile', 'stempel.png');
@@ -316,7 +348,7 @@ class ReviewerCertificateHandler extends Handler {
 		echo '<meta name="robots" content="noindex,nofollow,noarchive">';
 		echo $this->_getFaviconHtml($journal, $baseUrl);
 		echo '<title>Reviewer Certificate Settings</title><style>';
-		echo '*{box-sizing:border-box}body{margin:0;background:#eef1f4;color:#252a32;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}.top{background:#003b4d;color:#fff;padding:18px 28px;font-size:20px;font-weight:700}.page{max-width:1080px;margin:32px auto;padding:0 18px}.panel{background:#fff;border:1px solid #d8dde3;padding:28px;box-shadow:0 2px 8px rgba(0,0,0,.04)}.head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;border-bottom:1px solid #e3e6ea;padding-bottom:18px;margin-bottom:22px}.head h1{font-size:24px;margin:0 0 7px}.head p{margin:0;color:#667085;line-height:1.5}.back{color:#0071a1;font-weight:600;text-decoration:none;white-space:nowrap}.notice{padding:13px 15px;margin-bottom:18px;border-left:4px solid}.success{background:#ecfdf3;border-color:#12b76a;color:#067647}.error{background:#fef3f2;border-color:#f04438;color:#b42318}.error ul{margin:0;padding-left:20px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.card{border:1px solid #d8dde3;padding:16px}.card h2{font-size:17px;margin:0 0 13px}.preview{height:120px;background:#f7f8fa;border:1px dashed #c6ccd4;display:flex;align-items:center;justify-content:center;padding:10px}.preview img{max-width:100%;max-height:98px;object-fit:contain}.field{margin-top:14px}.field>label{display:block;font-weight:650;font-size:13px;margin-bottom:6px}.field input[type=file]{max-width:100%;font-size:12px}.field input[type=number],.signatory input{width:100%;height:40px;border:1px solid #aeb5bf;padding:8px 10px;background:#fff}.remove{display:block;font-size:12px;color:#555;line-height:1.4;margin-top:12px}.signatory{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}.signatory label{display:block;font-size:13px;font-weight:650;margin-bottom:6px}.actions{display:flex;justify-content:flex-end;align-items:center;gap:14px;border-top:1px solid #e3e6ea;margin-top:24px;padding-top:20px}.save{border:0;background:#0071a1;color:#fff;font-weight:700;padding:11px 20px;cursor:pointer}.help{font-size:13px;color:#667085;margin:0 0 20px}@media(max-width:760px){.grid,.signatory{grid-template-columns:1fr}.head{display:block}.back{display:inline-block;margin-top:12px}}</style></head><body>';
+		echo '*{box-sizing:border-box}body{margin:0;background:#eef1f4;color:#252a32;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif}.top{background:#003b4d;color:#fff;padding:18px 28px;font-size:20px;font-weight:700}.page{max-width:1080px;margin:32px auto;padding:0 18px}.panel{background:#fff;border:1px solid #d8dde3;padding:28px;box-shadow:0 2px 8px rgba(0,0,0,.04)}.head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;border-bottom:1px solid #e3e6ea;padding-bottom:18px;margin-bottom:22px}.head h1{font-size:24px;margin:0 0 7px}.head p{margin:0;color:#667085;line-height:1.5}.back{color:#0071a1;font-weight:600;text-decoration:none;white-space:nowrap}.notice{padding:13px 15px;margin-bottom:18px;border-left:4px solid}.success{background:#ecfdf3;border-color:#12b76a;color:#067647}.error{background:#fef3f2;border-color:#f04438;color:#b42318}.warning{background:#fffaeb;border-color:#f79009;color:#7a2e0e}.error ul{margin:0;padding-left:20px}.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.card{border:1px solid #d8dde3;padding:16px}.card h2{font-size:17px;margin:0 0 13px}.preview{height:120px;background:#f7f8fa;border:1px dashed #c6ccd4;display:flex;align-items:center;justify-content:center;padding:10px}.preview img{max-width:100%;max-height:98px;object-fit:contain}.field{margin-top:14px}.field>label,.public-grid label{display:block;font-weight:650;font-size:13px;margin-bottom:6px}.field input[type=file]{max-width:100%;font-size:12px}.field input[type=number],.signatory input,.public-grid input[type=text],.public-grid input[type=number],.public-grid select{width:100%;height:40px;border:1px solid #aeb5bf;padding:8px 10px;background:#fff}.remove{display:block;font-size:12px;color:#555;line-height:1.4;margin-top:12px}.signatory,.public-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px}.signatory label{display:block;font-size:13px;font-weight:650;margin-bottom:6px}.section{margin-top:28px;padding-top:22px;border-top:1px solid #e3e6ea}.section h2{margin:0 0 6px;font-size:19px}.check{display:flex!important;gap:8px;align-items:flex-start;font-weight:500!important;line-height:1.45}.quality{display:flex;gap:12px;margin-top:14px}.quality span{padding:8px 11px;border-radius:6px;background:#f2f4f7;font-size:12px}.actions{display:flex;justify-content:flex-end;align-items:center;gap:14px;border-top:1px solid #e3e6ea;margin-top:24px;padding-top:20px}.save{border:0;background:#0071a1;color:#fff;font-weight:700;padding:11px 20px;cursor:pointer}.help{font-size:13px;color:#667085;margin:0 0 20px}@media(max-width:760px){.grid,.signatory,.public-grid{grid-template-columns:1fr}.quality{flex-direction:column}.head{display:block}.back{display:inline-block;margin-top:12px}}</style></head><body>';
 		echo '<div class="top">Reviewer Certificate</div><main class="page"><div class="panel">';
 		echo '<div class="head"><div><h1>Certificate image settings</h1><p>Upload and size the journal logo, editor signature, and official stamp.</p></div><a class="back" href="' . $this->_e($backUrl) . '">&larr; Back to Plugins</a></div>';
 		if ($saved) echo '<div class="notice success">Settings and images were saved successfully.</div>';
@@ -333,6 +365,17 @@ class ReviewerCertificateHandler extends Handler {
 		$this->_renderSettingsCard('Official stamp', 'stampUpload', 'removeStamp', 'stampSizeMm', 'Display size (15–35 mm)', $stampSize, $stampAsset['url'], 'rcStampPreview');
 		echo '</div><div class="signatory"><div><label for="editorName">Signatory name</label><input id="editorName" name="editorName" type="text" maxlength="150" value="' . $this->_e($editorName) . '" placeholder="Dr. Editor Name"></div>';
 		echo '<div><label for="editorTitle">Signatory title</label><input id="editorTitle" name="editorTitle" type="text" maxlength="150" value="' . $this->_e($editorTitle) . '" placeholder="Editor in Chief"></div></div>';
+		echo '<section class="section"><h2>Public reviewer and editor map</h2><p class="help">Show aggregate country statistics on the journal homepage. Country names come from the ISO country selected in each OJS user profile; names and email addresses are never published.</p>';
+		echo '<label class="check"><input type="checkbox" name="publicInsightsEnabled" value="1"' . ($publicInsightsEnabled ? ' checked' : '') . '> Enable the public statistics panel</label>';
+		echo '<div class="public-grid"><div><label for="publicInsightsTitle">Panel title</label><input id="publicInsightsTitle" name="publicInsightsTitle" type="text" maxlength="120" value="' . $this->_e($publicInsightsTitle) . '" placeholder="Our Reviewer and Editorial Community"></div>';
+		echo '<div><label for="publicInsightsPosition">Homepage position</label><select id="publicInsightsPosition" name="publicInsightsPosition"><option value="bottom"' . ($publicInsightsPosition === 'bottom' ? ' selected' : '') . '>After homepage content</option><option value="top"' . ($publicInsightsPosition === 'top' ? ' selected' : '') . '>Before homepage content</option></select></div>';
+		echo '<div><label for="minimumCountryCount">Privacy threshold (people per role and country)</label><input id="minimumCountryCount" name="minimumCountryCount" type="number" min="1" max="10" value="' . $this->_e($minimumCountryCount) . '"><p class="help">Every non-zero displayed role count must meet this threshold. Recommended: 2.</p></div>';
+		echo '<div><label>Included roles</label><label class="check"><input type="checkbox" name="showReviewerStats" value="1"' . ($showReviewerStats ? ' checked' : '') . '> Completed reviewers</label><label class="check"><input type="checkbox" name="showEditorStats" value="1"' . ($showEditorStats ? ' checked' : '') . '> Journal managers and editors</label></div></div>';
+		if ($countryStatistics && empty($countryStatistics['error'])) {
+			echo '<div class="quality"><span>Reviewer profiles without a valid country: <strong>' . (int) $countryStatistics['missing']['reviewers'] . '</strong></span><span>Editor profiles without a valid country: <strong>' . (int) $countryStatistics['missing']['editors'] . '</strong></span></div>';
+			if ($countryStatistics['missing']['reviewers'] || $countryStatistics['missing']['editors']) echo '<div class="notice warning" style="margin-top:12px">Ask these users to choose their country in <strong>Profile → Contact</strong>. Free-text country guessing is intentionally avoided so the map remains accurate.</div>';
+		}
+		echo '</section>';
 		echo '<div class="actions"><a class="back" href="' . $this->_e($backUrl) . '">Cancel</a><button class="save" type="submit">Save settings</button></div></form>';
 		echo '</div></main><script>(function(){function p(i,o){var e=document.getElementById(i);if(!e)return;e.addEventListener("change",function(){var f=this.files&&this.files[0];if(!f)return;var r=new FileReader();r.onload=function(x){document.getElementById(o).src=x.target.result};r.readAsDataURL(f)})}p("logoUpload","rcLogoPreview");p("signatureUpload","rcSignaturePreview");p("stampUpload","rcStampPreview")})();</script></body></html>';
 	}
@@ -386,6 +429,20 @@ class ReviewerCertificateHandler extends Handler {
 		echo '<a class="back" href="' . $this->_e($baseUrl . '/index.php/' . $journalPath . '/user/profile') . '">&larr; Back to Profile</a>';
 		echo '<h1>My Review Certificates</h1>';
 		echo '<p class="sub">Click the button to open your certificate, then use browser Print (Ctrl+P) and select "Save as PDF".</p>';
+		$country = strtoupper(trim((string) $user->getCountry()));
+		$validCountry = false;
+		if (preg_match('/^[A-Z]{2}$/', $country)) {
+			try {
+				$factory = new \Sokil\IsoCodes\IsoCodesFactory();
+				foreach ($factory->getCountries() as $countryItem) {
+					if (strtoupper($countryItem->getAlpha2()) === $country) { $validCountry = true; break; }
+				}
+			} catch (Exception $e) {}
+		}
+		if (!$validCountry) {
+			$profileUrl = $baseUrl . '/index.php/' . $journalPath . '/user/profile';
+			echo '<div style="margin:0 0 18px;padding:13px 15px;background:#fffaeb;border-left:4px solid #f79009;color:#7a2e0e;font-size:.88rem;line-height:1.5">Your country has not been selected correctly. Please update <a href="' . $this->_e($profileUrl) . '">Profile → Contact</a> so your contribution is represented accurately in the public reviewer map.</div>';
+		}
 		if (empty($reviews)) {
 			echo '<div class="empty">No completed reviews found.</div>';
 		} else {
@@ -477,7 +534,7 @@ class ReviewerCertificateHandler extends Handler {
 		$verifyUrl = $journalUrl . '/reviewercertificate/verify/' .
 			$reviewId . '/' . $verificationToken;
 		$qrScriptUrl = $baseUrl .
-			'/plugins/generic/reviewerCertificate/assets/reviewerCertificateQr.js?v=1.8.0';
+			'/plugins/generic/reviewerCertificate/assets/reviewerCertificateQr.js?v=1.9.0';
 
 		echo '<!DOCTYPE html><html><head><meta charset="UTF-8">';
 		echo '<meta name="robots" content="noindex,nofollow,noarchive">';

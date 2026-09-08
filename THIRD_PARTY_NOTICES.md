@@ -12,3 +12,11 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 The QR implementation is bundled locally and does not send certificate verification URLs to an external QR service.
 
+## Natural Earth
+
+The public country map uses simplified geometry derived from **Natural Earth**,
+the 1:110m Admin 0 Countries dataset. Natural Earth vector data is in the public
+domain. Source: https://www.naturalearthdata.com/
+
+The geometry is bundled locally so viewing the journal homepage does not contact
+an external mapping or analytics service.

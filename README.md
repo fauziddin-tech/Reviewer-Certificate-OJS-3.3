@@ -16,6 +16,10 @@
 - Pengaturan ukuran gambar serta nama dan jabatan penandatangan.
 - Metadata plugin tersedia dalam bahasa Indonesia dan Inggris.
 - Tata letak sertifikat siap cetak atau disimpan sebagai PDF.
+- Panel statistik publik reviewer dan editor berdasarkan negara.
+- Peta dunia responsif, grafik peringkat negara, dan ringkasan jumlah kontribusi.
+- Normalisasi negara memakai kode ISO dari profil OJS agar variasi penulisan tidak menggandakan data.
+- Ambang privasi per negara serta pilihan posisi dan jenis statistik yang ditampilkan.
 
 ## Kompatibilitas
 
@@ -65,12 +69,20 @@ Pada daftar plugin, buka **Reviewer Certificate → Settings**. Administrator ju
 - ukuran tampilan setiap gambar;
 - nama penandatangan; dan
 - jabatan penandatangan.
+- aktivasi panel statistik publik;
+- judul dan posisi panel pada beranda;
+- statistik reviewer dan/atau editor; serta
+- ambang privasi minimum 1–10 orang untuk setiap peran pada setiap negara (nilai rekomendasi: 2).
 
 Format gambar yang didukung adalah PNG, JPG/JPEG, dan WebP, dengan ukuran maksimum 2 MB dan dimensi maksimum 3000 × 3000 piksel. PNG transparan direkomendasikan untuk tanda tangan dan stempel.
 
 ## Penggunaan
 
 Reviewer yang telah menyelesaikan review dapat membuka tab **Certificates** pada dashboard submission. Sertifikat dapat dicari, dibuka, dicetak, atau disimpan sebagai PDF. QR code pada sertifikat mengarah ke halaman verifikasi untuk memastikan keasliannya.
+
+Data negara dibaca dari pilihan **Country/Negara** pada **Profile → Contact** di OJS. Plugin tidak menebak teks negara yang tidak valid. Journal Manager dapat melihat jumlah profil reviewer dan editor yang belum memiliki kode negara valid pada halaman pengaturan plugin.
+
+Panel publik dinonaktifkan secara bawaan setelah upgrade. Untuk menampilkannya, buka pengaturan plugin, aktifkan **Public reviewer and editor map**, pilih statistik yang diperlukan, lalu simpan. Panel hanya menampilkan agregat negara dan tidak memublikasikan nama, email, atau identitas pengguna.
 
 ## Keamanan dan privasi
 
@@ -79,6 +91,8 @@ Reviewer yang telah menyelesaikan review dapat membuka tab **Certificates** pada
 - QR code dibuat secara lokal oleh plugin; URL verifikasi tidak dikirim ke penyedia QR eksternal.
 - Halaman sensitif menggunakan kebijakan tanpa cache dan instruksi agar tidak diindeks mesin pencari.
 - Halaman verifikasi menampilkan nama reviewer, jurnal, judul naskah, dan bulan penyelesaian kepada orang yang memiliki tautan atau QR code yang valid.
+- Panel peta publik hanya menggunakan statistik agregat. Negara tidak ditampilkan jika jumlah reviewer atau editor yang tidak nol berada di bawah ambang privasi untuk peran tersebut.
+- Peta dunia diproses di browser dari aset lokal dan tidak mengirim data pengguna ke layanan pemetaan eksternal.
 
 ## Pemecahan masalah
 
@@ -89,7 +103,7 @@ Reviewer yang telah menyelesaikan review dapat membuka tab **Certificates** pada
 
 ## Versi
 
-Versi saat ini: **1.8.0**
+Versi saat ini: **1.9.0**
 
 Perubahan setiap versi tersedia pada [CHANGELOG.md](CHANGELOG.md). Informasi pelaporan keamanan tersedia pada [SECURITY.md](SECURITY.md).
 
