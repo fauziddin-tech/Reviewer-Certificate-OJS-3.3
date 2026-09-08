@@ -10,6 +10,7 @@ All notable changes to Reviewer Certificate are documented in this file.
 - Added an OJS-native upgrade path for Site Administrators and a safe upgrade-information modal for Journal Managers.
 - Corrected Site Administrator authorization for the plugin settings.
 - Increased the maintenance release number so OJS recognizes this package as newer than 1.9.0.
+- Corrected the release archive naming convention to lowercase `reviewerCertificate` and added an automated package-root validation.
 
 ## [1.9.0] - 2026-09-08
 
