@@ -65,6 +65,10 @@ Setelah itu, bersihkan cache OJS dan aktifkan plugin melalui halaman pengelolaan
 
 OJS membatasi penggantian berkas plugin kepada akun **Site Administrator**. Jika masuk sebagai Site Administrator, menu **Upgrade** bawaan OJS akan menampilkan formulir unggah paket `.tar.gz`. Jika masuk sebagai **Journal Manager**, plugin menampilkan pop-up Upgrade berisi versi terpasang, tautan rilis resmi, dan petunjuk yang harus diteruskan kepada Site Administrator. Pembatasan ini tidak dilewati karena upgrade mengubah berkas pada server.
 
+Nama paket resmi harus diawali persis dengan `reviewerCertificate`—termasuk huruf kecil `r`—misalnya `reviewerCertificate-v1.9.1.tar.gz`. OJS 3.3 mencocokkan nama arsip dengan folder plugin dan server Linux membedakan huruf besar dan kecil.
+
+Paket rilis yang kompatibel dengan pengunggah OJS dapat dibuat dari akar repositori menggunakan `scripts/package-release.sh`.
+
 ## Pengaturan
 
 Pada daftar plugin, buka **Reviewer Certificate → Settings**. Administrator jurnal dapat mengatur:
