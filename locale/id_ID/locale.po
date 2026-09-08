@@ -43,3 +43,36 @@ msgstr "Belum ada data negara yang memenuhi ambang privasi saat ini."
 
 msgid "plugins.generic.reviewerCertificate.insights.javascript"
 msgstr "JavaScript diperlukan untuk menampilkan peta reviewer dan editor."
+
+msgid "plugins.generic.reviewerCertificate.settings.title"
+msgstr "Pengaturan Sertifikat Reviewer"
+
+msgid "plugins.generic.reviewerCertificate.upgrade.title"
+msgstr "Upgrade Sertifikat Reviewer"
+
+msgid "plugins.generic.reviewerCertificate.upgrade.description"
+msgstr "Periksa versi terpasang dan dapatkan paket upgrade resmi terbaru."
+
+msgid "plugins.generic.reviewerCertificate.upgrade.current"
+msgstr "Versi terpasang"
+
+msgid "plugins.generic.reviewerCertificate.upgrade.access"
+msgstr "Hak melakukan upgrade"
+
+msgid "plugins.generic.reviewerCertificate.upgrade.siteAdmin"
+msgstr "Administrator Situs"
+
+msgid "plugins.generic.reviewerCertificate.upgrade.managerNotice"
+msgstr "Demi keamanan, OJS hanya mengizinkan Administrator Situs mengganti berkas plugin. Journal Manager dapat mengatur plugin, tetapi tidak dapat menjalankan upgrade sistem berkas."
+
+msgid "plugins.generic.reviewerCertificate.upgrade.step1"
+msgstr "Unduh paket .tar.gz terbaru dari halaman rilis resmi."
+
+msgid "plugins.generic.reviewerCertificate.upgrade.step2"
+msgstr "Masuk sebagai Administrator Situs, lalu buka Administrasi → Jurnal yang Dikelola → Plugin."
+
+msgid "plugins.generic.reviewerCertificate.upgrade.step3"
+msgstr "Pilih Upgrade pada Sertifikat Reviewer, unggah paket, kemudian bersihkan cache OJS."
+
+msgid "plugins.generic.reviewerCertificate.upgrade.download"
+msgstr "Buka Rilis Terbaru"

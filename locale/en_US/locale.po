@@ -43,3 +43,36 @@ msgstr "No country data meets the current privacy threshold."
 
 msgid "plugins.generic.reviewerCertificate.insights.javascript"
 msgstr "JavaScript is required to display the reviewer and editor map."
+
+msgid "plugins.generic.reviewerCertificate.settings.title"
+msgstr "Reviewer Certificate Settings"
+
+msgid "plugins.generic.reviewerCertificate.upgrade.title"
+msgstr "Upgrade Reviewer Certificate"
+
+msgid "plugins.generic.reviewerCertificate.upgrade.description"
+msgstr "Review the installed version and obtain the latest official upgrade package."
+
+msgid "plugins.generic.reviewerCertificate.upgrade.current"
+msgstr "Installed version"
+
+msgid "plugins.generic.reviewerCertificate.upgrade.access"
+msgstr "Upgrade permission"
+
+msgid "plugins.generic.reviewerCertificate.upgrade.siteAdmin"
+msgstr "Site Administrator"
+
+msgid "plugins.generic.reviewerCertificate.upgrade.managerNotice"
+msgstr "For security, OJS only allows a Site Administrator to replace plugin files. Journal Managers may configure the plugin but cannot perform the filesystem upgrade."
+
+msgid "plugins.generic.reviewerCertificate.upgrade.step1"
+msgstr "Download the latest .tar.gz package from the official release page."
+
+msgid "plugins.generic.reviewerCertificate.upgrade.step2"
+msgstr "Sign in as Site Administrator and open Administration → Hosted Journals → Plugins."
+
+msgid "plugins.generic.reviewerCertificate.upgrade.step3"
+msgstr "Choose Upgrade for Reviewer Certificate, upload the package, then clear the OJS cache."
+
+msgid "plugins.generic.reviewerCertificate.upgrade.download"
+msgstr "Open Latest Release"
