@@ -111,6 +111,10 @@ Panel publik dinonaktifkan secara bawaan setelah upgrade. Untuk menampilkannya, 
 - Jika halaman pengaturan tidak terbuka, pastikan akun memiliki peran **Journal Manager** atau **Site Administrator**.
 - Jika terjadi error 500, periksa log PHP/OJS untuk mengetahui pesan kesalahan yang sebenarnya.
 
+## Tema Lite Scholar
+
+Repositori ini juga memuat tema OJS 3.3 ringan di [`themes/liteScholar`](themes/liteScholar), dengan negara penulis di bawah afiliasi. Paket tema dibuat dengan `scripts/package-theme.sh` dan tidak ikut dalam paket plugin sertifikat. Petunjuk ada di [README tema](themes/liteScholar/README.md).
+
 ## Versi
 
 Versi saat ini: **1.9.2**

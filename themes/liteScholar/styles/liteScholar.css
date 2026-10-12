@@ -1,0 +1,135 @@
+/*
+ * Lite Scholar: overrides on top of the OJS 3.3 Default Theme.
+ * Palette: Grain #D7CEC7, Blackboard #565656, Oxblood #76323F, Tan #C09F80.
+ * Tan has low contrast on white, so it is used only for borders and fills
+ * that carry dark text. Text and links use Blackboard and Oxblood.
+ */
+:root {
+	--ls-grain: #d7cec7;
+	--ls-grain-soft: #f5f2ef;
+	--ls-ink: #565656;
+	--ls-ink-strong: #3b3b3b;
+	--ls-accent: #76323f;
+	--ls-accent-dark: #5c2530;
+	--ls-tan: #c09f80;
+}
+
+body {
+	background: var(--ls-grain-soft);
+	color: var(--ls-ink);
+	font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+h1, h2, h3, h4, .page_title, .pkp_block .title {
+	color: var(--ls-ink-strong);
+	font-family: Georgia, "Times New Roman", serif;
+}
+
+a { color: var(--ls-accent); }
+a:hover, a:focus { color: var(--ls-accent-dark); }
+
+.pkp_structure_page { background: transparent; }
+.pkp_structure_content,
+.pkp_structure_main { background: transparent; }
+
+/* Header and navigation */
+.pkp_structure_head {
+	background: var(--ls-accent);
+	border-bottom: 4px solid var(--ls-tan);
+}
+.pkp_site_name .is_text,
+.pkp_site_name > a,
+.pkp_navigation_primary > li > a,
+.pkp_navigation_user > li > a {
+	color: #fff;
+	font-family: Georgia, "Times New Roman", serif;
+}
+.pkp_navigation_primary > li > a:hover,
+.pkp_navigation_primary > li > a:focus,
+.pkp_navigation_user > li > a:hover,
+.pkp_navigation_user > li > a:focus {
+	color: #fff;
+	background: var(--ls-accent-dark);
+}
+.pkp_navigation_primary ul {
+	background: #fff;
+	border: 1px solid var(--ls-grain);
+}
+.pkp_navigation_primary ul a { color: var(--ls-ink); }
+.pkp_navigation_primary ul a:hover,
+.pkp_navigation_primary ul a:focus {
+	color: var(--ls-accent);
+	background: var(--ls-grain-soft);
+}
+
+/* Content surfaces */
+.page,
+.obj_article_details,
+.obj_issue_toc,
+.pkp_page_index .current_issue {
+	color: var(--ls-ink);
+}
+.cmp_breadcrumbs,
+.cmp_breadcrumbs a { color: var(--ls-ink); }
+.obj_article_summary,
+.obj_issue_summary,
+.pkp_block {
+	border-color: var(--ls-grain);
+}
+.obj_article_summary .title a,
+.obj_issue_summary .title { color: var(--ls-accent); }
+.pkp_block .title {
+	border-bottom: 2px solid var(--ls-tan);
+}
+
+/* Buttons and galley links */
+.cmp_button,
+.pkp_button,
+.obj_galley_link,
+a.obj_galley_link {
+	background: var(--ls-accent);
+	border: 1px solid var(--ls-accent);
+	color: #fff;
+}
+.cmp_button:hover, .cmp_button:focus,
+.pkp_button:hover, .pkp_button:focus,
+.obj_galley_link:hover, .obj_galley_link:focus {
+	background: var(--ls-accent-dark);
+	border-color: var(--ls-accent-dark);
+	color: #fff;
+}
+.cmp_button_wire {
+	background: transparent;
+	border: 1px solid var(--ls-accent);
+	color: var(--ls-accent);
+}
+
+/* Authors: affiliation, then country, each below the name */
+.obj_article_details .authors .name,
+.obj_article_details .item.authors .name {
+	color: var(--ls-ink-strong);
+	font-weight: 700;
+}
+.obj_article_details .authors .affiliation,
+.obj_article_details .item.authors .affiliation {
+	display: block;
+	color: var(--ls-ink);
+	font-size: 0.875em;
+	line-height: 1.4;
+	white-space: pre-line;
+}
+
+/* Footer */
+.pkp_structure_footer_wrapper {
+	background: var(--ls-ink);
+	border-top: 4px solid var(--ls-tan);
+}
+.pkp_structure_footer_wrapper,
+.pkp_structure_footer_wrapper a,
+.pkp_footer_content {
+	color: var(--ls-grain-soft);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	* { transition: none !important; animation: none !important; }
+}

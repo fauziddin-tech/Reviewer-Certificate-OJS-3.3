@@ -28,6 +28,13 @@ jobs:
           node --check assets/reviewerCertificateQr.js
           node --check assets/reviewerInsights.js
           jq -e '.type == "FeatureCollection" and (.features | length > 150)' assets/world-110m.json
+      - name: Test and package the Lite Scholar theme
+        run: |
+          php themes/liteScholar/tests/authorCountryTest.php
+          php -r '$xml = simplexml_load_file("themes/liteScholar/version.xml"); if (!$xml || (string) $xml->release !== "1.0.0.0") { exit(1); }'
+          chmod +x scripts/package-theme.sh
+          scripts/package-theme.sh "$RUNNER_TEMP/liteScholar-v1.0.0.tar.gz"
+          test "$(tar -tzf "$RUNNER_TEMP/liteScholar-v1.0.0.tar.gz" | sed -n '1p')" = "liteScholar/"
       - name: Validate plugin metadata
         run: |
           php -r '$xml = simplexml_load_file("version.xml"); if (!$xml || (string) $xml->release !== "1.9.2.0") { exit(1); }'

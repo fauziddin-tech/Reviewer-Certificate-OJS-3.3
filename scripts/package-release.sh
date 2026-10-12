@@ -16,6 +16,7 @@ tar \
 	--exclude='./.git' \
 	--exclude='./.github' \
 	--exclude='./scripts' \
+	--exclude='./themes' \
 	--transform='s,^\.,reviewerCertificate,' \
 	-C "$plugin_dir" \
 	-czf "$archive_path" \
